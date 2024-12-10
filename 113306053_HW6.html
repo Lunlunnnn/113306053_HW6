@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>113306053_HW6</title>
+	<style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+        .game-log {
+            margin-top: 20px;
+            text-align: left;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    </style>
+</head>
+<body>
+	<h1>113306053_HW6_1A2B</h1>
+    <input type="text" id="guessInput" maxlength="4" / placeholder="請輸入4個不重複的數字">
+    <button onclick="submitGuess()">Submit</button>
+    <p id="feedback"></p>
+    <div class="game-log">
+        <h3>遊戲紀錄：</h3>
+        <ul id="guessLog"></ul>
+    </div>
+    <script>
+    	function generateSecretNumber() {
+    		const digits = Array.from({ length: 10 }, (_, i) => i.toString());
+    		const secret = [];
+    		while (secret.length < 4) {
+        		const randomIndex = Math.floor(Math.random() * digits.length);
+        		secret.push(digits[randomIndex]);
+        		digits.splice(randomIndex, 1);
+    		}
+    		return secret.join('');
+		}
+
+		const secretNumber = generateSecretNumber();
+		let attempts = 0;
+
+		function submitGuess() {
+    		const input = document.getElementById('guessInput').value;
+    		const feedback = document.getElementById('feedback');
+    		const guessLog = document.getElementById('guessLog');
+
+		    if (!/^\d{4}$/.test(input)) {
+        		alert('Please enter exactly 4 digits.');
+        		return;
+    		}
+    		if (new Set(input).size !== 4) {
+        		alert('Digits must not repeat.');
+        		return;
+    		}
+
+    		attempts++;
+
+    		let A = 0;
+    		let B = 0;
+
+    		for (let i = 0; i < 4; i++) {
+        		if (input[i] === secretNumber[i]) {
+            		A++;
+       		 	} else if (secretNumber.includes(input[i])) {
+            		B++;
+        		}
+    		}
+
+    		const result = `${input}: ${A}A${B}B`;
+    		const logItem = document.createElement('li');
+    		logItem.textContent = result;
+    		guessLog.appendChild(logItem);
+
+    		if (A === 4) {
+        		alert(`答對了，作答次數為：${attempts} `);
+        		document.getElementById('guessInput').disabled = true;
+    		} else {
+        		feedback.textContent = `作答次數： ${attempts}`;
+    		}
+
+    		document.getElementById('guessInput').value = '';
+		}
+    </script>
+</body>
+</html>
